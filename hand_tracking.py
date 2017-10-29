@@ -42,7 +42,7 @@ while True:
 	#BGR -> (0,0,0)
 	#draw the contour and convex full aroung hand
 	cv2.drawContours(image, [cnt], 0, (0, 255, 0), 1)
-	hull2 = cv2.convexHull(cnt)
+	# hull2 = cv2.convexHull(cnt)
 	# cv2.drawContours(image, [hull2], 0, (255, 0, 0), 3)
 
 	#find the convex hull
@@ -56,25 +56,6 @@ while True:
 	    far = tuple(cnt[f][0])
 	    cv2.line(image,start,end,[255,0,0],2)
 	    cv2.circle(image,far,5,[0,0,255],2)
-	
-	#finding convexity defects
-	# for cnt in contours:
-	# 	if (len(hull)>=3):
-	# 		print 'f'
-	# min_defect = 0
-	# max_defect = 0
-	# i = 0
-	# for i in range(defects.shape[0]):
-	# 	s,e,f,d = defects[i, 0]
-	# 	start = tuple(cnt[s][0])
-	# 	end = tuple(cnt[e][0])
-	# 	far = tuple(cnt[f][0])
-	# 	dist = cv2.pointPolygonTest(cnt, centr, True)
-	# 	cv2.line(image, start, end, [0,0,255], 1)
-	# 	cv2.circle(image, far, 5, [0, 0, 255], -1)
-	# 	print(i)
-
-
 
 	cv2.imshow('video', image)
 	
