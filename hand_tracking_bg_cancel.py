@@ -87,6 +87,10 @@ if __name__=='__main__':
                     cv2.line(clone,start,end,[255,0,0],2)
                     cv2.circle(clone,far,5,[0,0,255],2)
 
+
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                cv2.putText(clone,'Hello World',(10,450), font, 3,(255,255,255),2)
+
         # increment the number of frames
         num_frames += 1
 
