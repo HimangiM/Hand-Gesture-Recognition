@@ -15,14 +15,14 @@ def run_avg(image, aWeight):
     #Average the background frames
     cv2.accumulateWeighted(image, bg, aWeight)
 
-def segment(image, threshold=25):
+def segment(image, threshold=5):
     global bg
     #Difference between background and current image
     diff = cv2.absdiff(bg.astype("uint8"), image)
     #Thresholding on the image, (black and white), white is the hand, black is the background
     _, thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU) 
     #Find all contours on thresholded image
-    contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
     if len(contours) == 0:
         return
@@ -72,7 +72,7 @@ if __name__=='__main__':
                 (thresholded, segmented) = hand
 
                 #Draw the contour of hand, segmented contains the contour of hand
-                cv2.drawContours(clone, [segmented], -1, (0, 255, 0))
+                cv2.drawContours(clone, [segmented], -1, (0, 255, 0),2)
                 cv2.imshow("Theshold", thresholded)
 
                 # find the convex hull
