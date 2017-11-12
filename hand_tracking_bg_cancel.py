@@ -15,14 +15,14 @@ def run_avg(image, aWeight):
     #Average the background frames
     cv2.accumulateWeighted(image, bg, aWeight)
 
-def segment(image, threshold=5):
+def segment(image, threshold=25):
     global bg
     #Difference between background and current image
     diff = cv2.absdiff(bg.astype("uint8"), image)
     #Thresholding on the image, (black and white), white is the hand, black is the background
     _, thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU) 
     #Find all contours on thresholded image
-    contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    contours, hierarchy = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     if len(contours) == 0:
         return
@@ -50,6 +50,7 @@ if __name__=='__main__':
         (grabbed, frame) = camera.read()
         #Flip the image to avoid lateral inversion
         frame = cv2.flip(frame, 1)
+        cv2.circle(frame, (200, 200), 1, (0,255,0), 3)
         clone = frame.copy()
 
         cv2.rectangle(clone, (top, right), (bottom, left), (0, 255, 0), 1)
@@ -64,6 +65,7 @@ if __name__=='__main__':
         if num_frames < 30:
             run_avg(gray, aWeight)
         else:
+
             # segment the hand region
             hand = segment(gray)
 
@@ -72,13 +74,15 @@ if __name__=='__main__':
                 (thresholded, segmented) = hand
 
                 #Draw the contour of hand, segmented contains the contour of hand
-                cv2.drawContours(clone, [segmented], -1, (0, 255, 0),2)
+                cv2.drawContours(clone, [segmented], -1, (0, 255, 0))
                 cv2.imshow("Theshold", thresholded)
 
-                # find the convex hull
+                # find the convex hull, line
                 hull = cv2.convexHull(segmented, returnPoints = False)
+
+                #Points
                 defects = cv2.convexityDefects(segmented, hull)
-                
+
                 for i in range(defects.shape[0]):
                     s,e,f,d = defects[i,0]
                     start = tuple(segmented[s][0])
@@ -88,8 +92,23 @@ if __name__=='__main__':
                     cv2.circle(clone,far,5,[0,0,255],2)
 
 
-                font = cv2.FONT_HERSHEY_SIMPLEX
-                cv2.putText(clone,'Hello World',(10,450), font, 3,(255,255,255),2)
+                area = cv2.contourArea(segmented)
+                length = cv2.arcLength(segmented, True)
+                print area
+                approx = cv2.approxPolyDP(segmented, 0.1*cv2.arcLength(segmented, True), True)
+
+            	font = cv2.FONT_HERSHEY_SIMPLEX
+                if area < 10000:
+                	cv2.putText(clone,'ONE',(10,470), font, 3,(255,255,255),2)
+                if area > 10000 and area < 13500:
+                	cv2.putText(clone,'TWO',(10,470), font, 3,(255,255,255),2)
+                if area > 13500 and area < 15000:
+                	cv2.putText(clone,'THREE',(10,470), font, 3,(255,255,255),2)
+                if area > 15000 and area < 30000:
+                	cv2.putText(clone,'FOUR',(10,470), font, 3,(255,255,255),2)
+                elif area > 30000:
+                	cv2.putText(clone,'FIVE',(10,470), font, 3,(255,255,255),2)
+
 
         # increment the number of frames
         num_frames += 1
