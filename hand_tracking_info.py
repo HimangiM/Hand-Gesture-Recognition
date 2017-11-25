@@ -40,12 +40,14 @@ def segment(image, threshold=25):
 
 
 if __name__=='__main__':
+	passwords = []
 	aWeight = 0.1
 	camera = cv2.VideoCapture(0)
 	top, right, bottom, left = 0, 0 ,400, 400
 	num_frames = 0
 	cur_frame = 0
 	r = True
+	l = []
 
 	while True:
 		#Read from camera
@@ -80,6 +82,7 @@ if __name__=='__main__':
 			cv2.putText(clone,'Averaging. Please Wait.',(10,470), font, 1,(255,255,255),2)
 			run_avg(gray, aWeight)
 		else:
+			digit = ""
 			# segment the hand region
 			#Register
 			hand = segment(gray)
@@ -109,7 +112,7 @@ if __name__=='__main__':
 
 				area = cv2.contourArea(segmented)
 				length = cv2.arcLength(segmented, True)
-				print area
+				# print area
 				
 				approx = cv2.approxPolyDP(segmented, 0.1*cv2.arcLength(segmented, True), True)
 
@@ -133,21 +136,56 @@ if __name__=='__main__':
 					digit = "FIVE"
 					cv2.putText(clone, digit,(10,470), font, 1,(255,255,255),2)
 
-			# k2 = cv2.waitKey(10) & 0xff
 			if (r == True):
 				# Register
-				cv2.putText(clone,'Enter new password',(10,440), font, 1,(255,255,255),2)     
+				cv2.putText(clone,'Enter new password',(300,470), font, 1,(255,255,255),2)     
+				
+				k3 = cv2.waitKey(10) & 0xff
 
+				#e = enter
+				if k3 == 101:
+					l.append(digit)
+					print 'Entered', digit
 
+				# c : confirm
 				k2 = cv2.waitKey(10) & 0xff
 				if k2 == 99:
+					print l
 					r = False
 
-			elif (r== False):
-				cv2.putText(clone,'Enter password to Login',(10,440), font, 1,(255,255,255),2) 
+				
+			elif (r == False):
+				text = ""
+				passwords.append(l)
+				l = []
+				cv2.putText(clone,'Enter password to Login',(250,470), font, 1,(255,255,255),2) 
+				k3 = cv2.waitKey(10) & 0xff
+
+				#e = enter
+				if k3 == 101:
+					l.append(digit)
+					print 'Entered', digit
+
+				flag = 0
 				k2 = cv2.waitKey(10) & 0xff
 				if k2 == 99:
-					r = True    
+					print l, passwords
+					if l in passwords:
+						flag = 1
+						print 'Login Successful'
+						text = 'Login Successful'
+
+					if flag == 0:
+						print 'Login failed. Try Again.'
+						text = 'Login failed. Try Again.'
+						l = []
+				
+					cv2.putText(clone,text,(10,420), font, 1,(255,255,255),2) 
+				# x = exit
+				if k2 == 120:
+					r = True  
+					l = []  
+
 
 
 
