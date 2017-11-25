@@ -151,13 +151,13 @@ if __name__=='__main__':
 				k2 = cv2.waitKey(10) & 0xff
 				if k2 == 99:
 					print l
+					if l != []:
+						passwords.append(l)
+					l = []
 					r = False
-
 				
 			elif (r == False):
 				text = ""
-				passwords.append(l)
-				l = []
 				cv2.putText(clone,'Enter password to Login',(250,470), font, 1,(255,255,255),2) 
 				k3 = cv2.waitKey(10) & 0xff
 
@@ -168,26 +168,21 @@ if __name__=='__main__':
 
 				flag = 0
 				k2 = cv2.waitKey(10) & 0xff
+				#c to confirm
 				if k2 == 99:
 					print l, passwords
 					if l in passwords:
 						flag = 1
-						print 'Login Successful'
-						text = 'Login Successful'
+						print 'Login Successful. Press x to exit'
 
 					if flag == 0:
 						print 'Login failed. Try Again.'
-						text = 'Login failed. Try Again.'
 						l = []
 				
-					cv2.putText(clone,text,(10,420), font, 1,(255,255,255),2) 
 				# x = exit
 				if k2 == 120:
 					r = True  
 					l = []  
-
-
-
 
 
 		# increment the number of frames
