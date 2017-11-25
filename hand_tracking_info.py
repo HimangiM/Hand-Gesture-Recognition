@@ -73,6 +73,7 @@ if __name__=='__main__':
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
 		present_frame = num_frames
+		
 		command_s = "s : Averaging"
 		command_n = "n : New Password"
 		command_e = "e : Enter Digit"
