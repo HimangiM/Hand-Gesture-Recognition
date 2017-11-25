@@ -78,6 +78,7 @@ if __name__=='__main__':
 		command_e = "e : Enter Digit"
 		command_c = "c : Confirm"
 		command_esc = "esc : Exit"
+		
 		cv2.putText(clone, command_s,(420,20), font, 0.6, (255,255,255),2)
 		cv2.putText(clone, command_n,(420,40), font, 0.6, (255,255,255),2)
 		cv2.putText(clone, command_e,(420,60), font, 0.6, (255,255,255),2)
