@@ -48,6 +48,7 @@ if __name__=='__main__':
 	cur_frame = 0
 	r = True
 	l = []
+	text = ""
 
 	while True:
 		#Read from camera
@@ -72,6 +73,17 @@ if __name__=='__main__':
 		font = cv2.FONT_HERSHEY_SIMPLEX
 
 		present_frame = num_frames
+		command_s = "s : Averaging"
+		command_n = "n : New Password"
+		command_e = "e : Enter Digit"
+		command_c = "c : Confirm"
+		command_esc = "esc : Exit"
+		cv2.putText(clone, command_s,(420,20), font, 0.6, (255,255,255),2)
+		cv2.putText(clone, command_n,(420,40), font, 0.6, (255,255,255),2)
+		cv2.putText(clone, command_e,(420,60), font, 0.6, (255,255,255),2)
+		cv2.putText(clone, command_c,(420,80), font, 0.6, (255,255,255),2)
+		cv2.putText(clone, command_esc,(420,100), font, 0.6, (255,255,255),2)
+
 
 		# cur_frame = num_frames
 		#s for averaging
@@ -79,7 +91,7 @@ if __name__=='__main__':
 			cur_frame = num_frames 
 		
 		if num_frames < 100 or num_frames < cur_frame + 100:
-			cv2.putText(clone,'Averaging. Please Wait.',(10,470), font, 1,(255,255,255),2)
+			cv2.putText(clone,'Averaging. Please Wait.',(10,470), font, 1, (255,255,255),2)
 			run_avg(gray, aWeight)
 		else:
 			digit = ""
@@ -138,6 +150,7 @@ if __name__=='__main__':
 
 			if (r == True):
 				# Register
+				text = ""
 				cv2.putText(clone,'Enter new password',(300,470), font, 1,(255,255,255),2)     
 				
 				k3 = cv2.waitKey(10) & 0xff
@@ -157,8 +170,8 @@ if __name__=='__main__':
 					r = False
 				
 			elif (r == False):
-				text = ""
 				cv2.putText(clone,'Enter password to Login',(250,470), font, 1,(255,255,255),2) 
+
 				k3 = cv2.waitKey(10) & 0xff
 
 				#e = enter
@@ -170,19 +183,24 @@ if __name__=='__main__':
 				k2 = cv2.waitKey(10) & 0xff
 				#c to confirm
 				if k2 == 99:
-					print l, passwords
 					if l in passwords:
 						flag = 1
-						print 'Login Successful. Press x to exit'
+						print 'Login Successful.'
+						text = 'Login Successful.'
 
 					if flag == 0:
 						print 'Login failed. Try Again.'
+						text = 'Login failed. Try Again.'
 						l = []
 				
-				# x = exit
-				if k2 == 120:
+				cv2.putText(clone, text,(10,440), font, 0.7,(255,255,255),2)
+
+				# n = new password 
+				if k2 == 110:
 					r = True  
 					l = []  
+
+
 
 
 		# increment the number of frames
